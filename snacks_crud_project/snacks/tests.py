@@ -9,7 +9,7 @@ class SnackTest(TestCase):
         self.user = get_user_model().objects.create_user(
             username='bayan',
             email='bayankhatibtr@gmail.com',
-            password='Bya@0143575'
+            password='B12345678'
         )
         self.snack = Snack.objects.create(
             title='pizza',
