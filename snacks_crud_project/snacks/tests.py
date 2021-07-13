@@ -53,6 +53,7 @@ class SnackTest(TestCase):
     def test_string_representation(self):
         snack_str = Snack(title='pizza')
         self.assertEqual(str(snack_str),self.snack.title)
+        
 
     def test_all_fields(self):
         self.assertEqual(self.snack.title, 'pizza')
