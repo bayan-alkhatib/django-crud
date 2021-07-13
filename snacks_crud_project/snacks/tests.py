@@ -11,63 +11,56 @@ class SnackTest(TestCase):
             email='bayankhatibtr@gmail.com',
             password='Bya@0143575'
         )
-        self.post = Snack.objects.create(
+        self.snack = Snack.objects.create(
             title='pizza',
             purshaser=self.user,
             description='tomato'
         )
 
-    def test_string_representation(self):
-        post = Snack(title='title')
-        self.assertEqual(str(post), post.title)
-
-    def test_all_fields(self):
-        self.assertEqual(str(self.post), 'pizza')
-        self.assertEqual(f'{self.post.purshaser}', 'bayan')
-        self.assertEqual(self.post.description, 'tomato')
-
-
     def test_snack_list_view(self):
-        response = self.client.get(reverse('snack_list'))
-        self.assertEqual(response.status_code, 200)
+        expected=200
+        actual= self.client.get(reverse('snack_list')).status_code
+        self.assertEqual(actual, expected)
+
 
     def test_snack_details_view(self):
-        response = self.client.get(reverse('snack_detail', args='1'))
-        self.assertEqual(response.status_code, 200)
+        expected=200
+        actual = self.client.get(reverse('snack_detail', args='1')).status_code
+        self.assertEqual(expected, actual)
+
+
+    def test_snack_create_view(self):
+        expected=200
+        actual = self.client.post(reverse('create_snack'),{'title': 'pizza', ' purshaser': self.user,'description': 'tomato',})
+        self.assertEqual(expected, actual.status_code)
+        self.assertContains(actual, 'tomato')
+        self.assertContains(actual, 'bayan')
+        
 
 
     def test_snack_update_view(self):
-        response = self.client.post(reverse('update_snack', args='1'), {
-            'title': 'pizza',
-        })
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'pizza')
+        expected=200
+        actual = self.client.get(reverse('update_snack', args='1')).status_code
+        self.assertEqual(expected, actual)
 
 
-    def test_snack_list_status(self):
-        expected = 200
-        url = reverse('snack_list')
-        response = self.client.get(url)
-        actual = response.status_code
-        self.assertEquals(expected, actual)
+    def test_snack_delete_view(self):
+        expected=200
+        actual = self.client.get(reverse('delete_snack', args='1')).status_code
+        self.assertEqual(expected, actual)
 
+    
+    def test_string_representation(self):
+        snack_str = Snack(title='pizza')
+        self.assertEqual(str(snack_str),self.snack.title)
 
-    def test_create_view(self):
-        response = self.client.post(reverse('create_snack'), {
-            'title': 'pizza',
-            ' purshaser': self.user,
-            'description': 'tomato',
-        })
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'pizza')
-        self.assertContains(response, 'tomato')
-        self.assertContains(response, 'bayan')
+    def test_all_fields(self):
+        self.assertEqual(self.snack.title, 'pizza')
+        self.assertEqual(str(self.snack.purshaser), 'bayan')
+        self.assertEqual(self.snack.description, 'tomato')
 
+  
 
-    def test_delete_view(self):
-        response = self.client.get(reverse('delete_snack', args='1'))
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response,'delete Snacks')
-        post_response = self.client.post(reverse('delete_snack', args='1'))
-        self.assertRedirects(post_response, reverse(
-            'snack_list'), status_code=302)
+  
+
+   
